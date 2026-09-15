@@ -166,29 +166,26 @@ The Random Forest also produces feature importance scores (mean decrease in impu
 
 ## How to Run
 
+Prerequisites: [Nix](https://nixos.org/download) with flakes enabled.
+
+This repo's Python environment is fully project-local - a `flake.nix` devShell provides Python and `uv`, and `uv` installs every dependency pinned in `pyproject.toml`/`uv.lock` into a `.venv` inside this directory. Nothing is installed system-wide.
+
 From the repo root after a clean clone:
 
 ```bash
-# 1. Create and activate a virtual environment
-python -m venv venv
-source venv/bin/activate       # Windows: venv\Scripts\activate
+# 1. Enter the dev shell - this also runs `uv sync` automatically
+#    the first time, creating .venv with every pinned dependency installed
+nix develop
 
-# 2. Install dependencies
-pip install -r requirements.txt
+# 2. Launch Jupyter
+uv run jupyter notebook titanic_survivor_analysis.ipynb
 
-# 3. Launch Jupyter
-jupyter notebook titanic_survivor_analysis.ipynb
-
-# 4. Run all cells top to bottom: Kernel -> Restart & Run All
+# 3. Run all cells top to bottom: Kernel -> Restart & Run All
 ```
 
 The notebook writes `titanic_survivor_analysis.db` to the repo root on first run. Subsequent runs overwrite it. The random seed is set to `1337` in Part 5, so validation accuracy figures are reproducible.
 
-If you prefer conda for the XGBoost dependency:
-
-```bash
-conda install py-xgboost
-```
+If you don't use Nix, any Python 3.12+ environment with `uv` installed works the same way: run `uv sync` in place of `nix develop` and use the `uv run ...` commands above unchanged.
 
 ---
 
